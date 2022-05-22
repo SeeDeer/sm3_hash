@@ -3,7 +3,7 @@
  * @author:     SeeDeer18@foxmail.com
  * @brief:      国密SM3密码杂凑算法实现, 参考国家密码管理局2010年公告算法
  * @version:    1.0.0
- * @LastEditTime: 2022-05-22 00:40:07
+ * @LastEditTime: 2022-05-22 13:58:09
  * @attention: http://www.oscca.gov.cn/sca/xxgk/2010-12/17/content_1002389.shtml
  *************************************************************************/
 #include "sm3_hash.h"
@@ -86,11 +86,9 @@ static void cf(uint32_t V[], uint32_t W[], uint32_t W1[])
         // SS1 = ((A ≪ 12) + E + (Tj ≪ j)) ≪ 7
         // 注意处理好 (Tj ≪ j)
         // Tj = (j > 15 ) ? T16_63 : T00_15;
-        if (j == 0) {
-            Tjj = T00_15;
-        } else if (j == 16) {
+        if (j == 16) {
             Tjj = SM3_CYCLE_LEFT(T16_63, 16);
-        } else {
+        } else if (j > 0) {
             Tjj = SM3_CYCLE_LEFT(Tjj, 1);
         }
         SS1 = SM3_CYCLE_LEFT((SM3_CYCLE_LEFT(A,12) + E + Tjj),7);
@@ -205,7 +203,7 @@ void sm3_init(sm3_hash_t *sm3_handle)
     sm3_handle->iv[7] = IV_H;
 }
 
-#if 0
+#if 1
 #include <stdio.h>
 #include <sys/time.h>
 
